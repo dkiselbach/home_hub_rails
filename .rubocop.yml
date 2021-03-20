@@ -1,0 +1,14 @@
+require:
+  - rubocop-rspec
+  - rubocop-rails
+
+Metrics/BlockLength:
+  Exclude:
+    - '**/*_spec.rb'
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - db/schema.rb
+    - db/migrate/**.rb
+    - bin/bundle
