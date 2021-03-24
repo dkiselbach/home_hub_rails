@@ -31,6 +31,10 @@ module PurpleAir
       ENV['READ_TOKEN']
     end
 
+    def reading_time
+      @reading_time ||= parsed_response[:time_stamp]
+    end
+
     def fields
       {
         fields: DEFAULT_FIELDS,
@@ -44,7 +48,7 @@ module PurpleAir
       instance_variables.each do |variable|
         if variable =~ /pm.*total/
           total = instance_variable_get(variable)
-          instance_variable_set(variable.to_s.gsub(/total/, 'average'), total / count)
+          instance_variable_set(variable.to_s.gsub(/total/, 'average'), (total / count).to_i)
         end
       end
     end
@@ -56,7 +60,7 @@ module PurpleAir
         data_point_hash.each do |key, value|
           next unless key =~ /pm/
 
-          variable_name = key.gsub(/[.]/, 'point')
+          variable_name = key.gsub(/[.]/, '_')
           current_val = instance_variable_get("@#{variable_name}_total") || 0
           instance_variable_set("@#{variable_name}_total", current_val + value)
         end

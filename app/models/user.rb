@@ -8,4 +8,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
+
+  has_many :home_users, dependent: :destroy
+  has_many :homes, through: :home_users
 end
