@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_20_233922) do
+ActiveRecord::Schema.define(version: 2021_03_24_053701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,27 @@ ActiveRecord::Schema.define(version: 2021_03_20_233922) do
     t.integer "thirty_min_average"
     t.integer "hour_average"
     t.integer "day_average"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "home_id", null: false
+    t.index ["home_id"], name: "index_air_quality_logs_on_home_id"
+  end
+
+  create_table "home_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "home_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["home_id"], name: "index_home_users_on_home_id"
+    t.index ["user_id"], name: "index_home_users_on_user_id"
+  end
+
+  create_table "homes", force: :cascade do |t|
+    t.string "name"
+    t.float "nw_lat"
+    t.float "nw_long"
+    t.float "se_lat"
+    t.float "se_long"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -45,4 +66,7 @@ ActiveRecord::Schema.define(version: 2021_03_20_233922) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "air_quality_logs", "homes"
+  add_foreign_key "home_users", "homes"
+  add_foreign_key "home_users", "users"
 end

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe PurpleAir::GetSensors, type: :model do
   let(:params) do
     {
-      fields: 'icon,name,latitude,longitude,altitude,pm2.5,pm2.5_10minute,pm2.5_30minute,pm2.5_60minute,pm2.5_24hour',
+      fields: 'name,latitude,longitude,altitude,pm2.5,pm2.5_10minute,pm2.5_30minute,pm2.5_60minute,pm2.5_24hour',
       location_type: 0,
       nwlat: 37.80493,
       nwlng: -122.448382,

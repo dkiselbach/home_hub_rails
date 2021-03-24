@@ -8,5 +8,6 @@ FactoryBot.define do
     thirty_min_average { Faker::Number.between(from: 0, to: 100) }
     hour_average { Faker::Number.between(from: 0, to: 100) }
     day_average { Faker::Number.between(from: 0, to: 100) }
+    home
   end
 end
