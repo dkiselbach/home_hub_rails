@@ -18,7 +18,6 @@ gem 'jbuilder', '~> 2.7'
 gem 'kaminari'
 
 # Authentication
-gem 'devise'
 gem 'devise_token_auth'
 
 # Purple Air API

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.pagination do
   json.total_pages collection.total_pages
   json.total_count collection.total_count

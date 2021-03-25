@@ -2,7 +2,9 @@
 
 # A class for the Home model.
 class Home < ApplicationRecord
-  validates :nw_lat, :nw_long, :se_lat, :se_long, :name, presence: true
+  validates :name, presence: true
+  validates :nw_lat, :se_lat, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
+  validates :nw_long, :se_long, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
 
   has_many :air_quality_logs, dependent: :destroy
   has_many :home_users, dependent: :destroy

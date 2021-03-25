@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :home_user do
-    user { nil }
-    home { nil }
+    user
+    home
   end
 end
