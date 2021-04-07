@@ -7,15 +7,15 @@ module Api
       before_action :authenticate_user!
 
       def create
-        home = Home.create(params)
+        @home = Home.create(home_params)
 
-        raise StandardError if home.errors
+        raise StandardError unless @home.valid?
 
-        current_user.home_user.create(home_id: home.id)
+        current_user.home_users.create(home_id: @home.id)
       end
 
       def show
-        Home.find(params[:id])
+        @home = Home.find(params[:id])
       end
 
       private
