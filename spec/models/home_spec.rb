@@ -36,7 +36,7 @@ RSpec.describe Home, type: :model do
         create(:home_user, home: home, user: user)
       end
 
-      it 'destroys air_quality_log' do
+      it 'destroys home_users' do
         expect { home.destroy }.to change(HomeUser, :count).by(-1)
       end
     end
