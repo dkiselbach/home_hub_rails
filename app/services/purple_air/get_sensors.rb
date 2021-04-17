@@ -74,26 +74,5 @@ module PurpleAir
         define_singleton_method(variable.to_s.delete('@')) { instance_variable_get variable }
       end
     end
-
-    # def respond_to?(method_name, *args)
-    #   return true if method_name =~ /pm.*total/ || method_name =~ /pm.*average/
-    #
-    #   super
-    # end
-    #
-    # def respond_to_missing?(method_name, *args)
-    #   return true if method_name =~ /pm.*total/ || method_name =~ /pm.*average/
-    #
-    #   super
-    # end
-    #
-    # def method_missing(method_name, *args, &block)
-    #   calculate_averages if method_name =~ /average/
-    #   if instance_variable_names.include? "@#{method_name}"
-    #     instance_variable_get "@#{method_name}"
-    #   else
-    #     super
-    #   end
-    # end
   end
 end

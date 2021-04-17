@@ -22,6 +22,15 @@ RSpec.shared_context 'with PurpleAir mocks', shared_context: :metadata do
     }
   end
 
+  let(:pm2_5_values) do
+    {
+      pm2_5_total: 37.4,
+      pm2_5_average: 2,
+      pm2_5_24hour_total: 51.800000000000004,
+      pm2_5_24hour_average: 3
+    }
+  end
+
   before do
     stub_request(:get, 'https://api.purpleair.com/v1/sensors')
       .with(
