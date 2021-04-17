@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Homes', type: :request do
-  include_context 'with shared methods'
+  include_context 'with controller shared setup'
 
   describe 'POST /api/v1/homes' do
     let(:params) do

@@ -5,6 +5,7 @@ require:
 Metrics/BlockLength:
   Exclude:
     - '**/*_spec.rb'
+    - '**/support/*.rb'
 
 AllCops:
   NewCops: enable
@@ -12,3 +13,7 @@ AllCops:
     - db/schema.rb
     - db/migrate/**.rb
     - bin/bundle
+
+RSpec/DescribeClass:
+  Exclude:
+    - '**/*_rake_spec.rb'

@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::AirQualityLogsController, type: :request do
-  include_context 'with shared methods'
+  include_context 'with controller shared setup'
 
   before do
     home = create(:home)

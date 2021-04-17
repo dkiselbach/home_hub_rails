@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe HomeUser, type: :model do
   subject(:home_user) { create(:home_user, params) }
 
-  include_context 'with shared methods'
+  include_context 'with controller shared setup'
   let(:params) { { user_id: user.id, home_id: home.id } }
 
   describe '.valid?' do
