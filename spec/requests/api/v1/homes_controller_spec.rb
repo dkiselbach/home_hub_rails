@@ -69,4 +69,33 @@ RSpec.describe 'Api::V1::Homes', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/homes' do
+    subject(:parsed_response) { JSON.parse(response.body) }
+
+    context 'when user has access to homes' do
+      let(:user) { create(:user_with_homes, homes_count: 5) }
+
+      it 'returns correct number of homes' do
+        get '/api/v1/homes', headers: auth_headers.merge({ 'Accept' => 'application/json' })
+        expect(parsed_response['data'].count).to eq(5)
+      end
+
+      it 'returns correct fields' do
+        get '/api/v1/homes', headers: auth_headers.merge({ 'Accept' => 'application/json' })
+        keys = %w[id name nw_lat_long se_lat_long created_at updated_at user_ids]
+        expect(parsed_response['data'].first.keys).to eq(keys)
+      end
+    end
+
+    context 'when user has no homes' do
+      let(:user) { create(:user) }
+
+      it 'returns correct number of homes' do
+        get '/api/v1/homes',
+            headers: auth_headers.merge({ 'Accept' => 'application/json' })
+        expect(parsed_response['data'].count).to eq(0)
+      end
+    end
+  end
 end
