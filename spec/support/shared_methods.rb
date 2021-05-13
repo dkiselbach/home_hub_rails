@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'with controller shared setup', shared_context: :metadata do
-  let(:user) { create(:user) }
-  let(:home) { create(:home) }
+RSpec.shared_context 'with user with homes', shared_context: :metadata do
+  let(:user) { create(:user_with_homes) }
   let(:auth_headers) { user.create_new_auth_token.merge }
+  let(:parsed_response) { JSON.parse(response.body) }
 end
 
 RSpec.shared_context 'with PurpleAir mocks', shared_context: :metadata do
@@ -47,6 +47,6 @@ RSpec.shared_context 'with PurpleAir mocks', shared_context: :metadata do
 end
 
 RSpec.configure do |rspec|
-  rspec.include_context 'with controller shared setup', include_shared: true
+  rspec.include_context 'with user with homes', include_shared: true
   rspec.include_context 'with PurpleAir mocks', include_shared: true
 end

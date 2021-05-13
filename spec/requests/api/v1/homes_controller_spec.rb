@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Homes', type: :request do
-  include_context 'with controller shared setup'
+  include_context 'with user with homes'
 
   describe 'POST /api/v1/homes' do
     let(:params) do
@@ -17,15 +17,19 @@ RSpec.describe 'Api::V1::Homes', type: :request do
     end
 
     context 'when params are valid' do
+      before do
+        user
+      end
+
       it 'creates a home record' do
         expect do
-          post '/api/v1/homes', headers: auth_headers.merge({ 'Accept' => 'application/json' }), params: params
+          post api_v1_homes_url, headers: auth_headers.merge({ 'Accept' => 'application/json' }), params: params
         end.to change(Home, :count).by(1)
       end
 
       it 'creates a home_users record' do
         expect do
-          post '/api/v1/homes', headers: auth_headers.merge({ 'Accept' => 'application/json' }), params: params
+          post api_v1_homes_url, headers: auth_headers.merge({ 'Accept' => 'application/json' }), params: params
         end.to change(HomeUser, :count).by(1)
       end
     end
@@ -50,7 +54,7 @@ RSpec.describe 'Api::V1::Homes', type: :request do
       end
 
       it 'returns home details' do
-        get "/api/v1/homes/#{home.id}", headers: auth_headers.merge({ 'Accept' => 'application/json' })
+        get api_v1_home_url(id: home.id), headers: auth_headers.merge({ 'Accept' => 'application/json' })
         expect(response.body).to eq(response_body)
       end
     end
@@ -64,7 +68,7 @@ RSpec.describe 'Api::V1::Homes', type: :request do
       end
 
       it 'returns error message' do
-        get "/api/v1/homes/#{home.id + 10}", headers: auth_headers.merge({ 'Accept' => 'application/json' })
+        get api_v1_home_url(id: home.id + 10), headers: auth_headers.merge({ 'Accept' => 'application/json' })
         expect(response.body).to eq(response_body)
       end
     end
@@ -77,14 +81,20 @@ RSpec.describe 'Api::V1::Homes', type: :request do
       let(:user) { create(:user_with_homes, homes_count: 5) }
 
       it 'returns correct number of homes' do
-        get '/api/v1/homes', headers: auth_headers.merge({ 'Accept' => 'application/json' })
+        get api_v1_homes_url, headers: auth_headers.merge({ 'Accept' => 'application/json' })
         expect(parsed_response['data'].count).to eq(5)
       end
 
       it 'returns correct fields' do
-        get '/api/v1/homes', headers: auth_headers.merge({ 'Accept' => 'application/json' })
+        get api_v1_homes_url, headers: auth_headers.merge({ 'Accept' => 'application/json' })
         keys = %w[id name nw_lat_long se_lat_long created_at updated_at user_ids]
         expect(parsed_response['data'].first.keys).to eq(keys)
+      end
+
+      it 'returns pagination' do
+        get api_v1_homes_url, headers: auth_headers.merge({ 'Accept' => 'application/json' })
+        expect(parsed_response['pagination']).to eq({ 'total_pages' => 1, 'total_count' => 5, 'current_page' => 1,
+                                                      'next_page' => nil })
       end
     end
 
@@ -92,7 +102,7 @@ RSpec.describe 'Api::V1::Homes', type: :request do
       let(:user) { create(:user) }
 
       it 'returns correct number of homes' do
-        get '/api/v1/homes',
+        get api_v1_homes_url,
             headers: auth_headers.merge({ 'Accept' => 'application/json' })
         expect(parsed_response['data'].count).to eq(0)
       end

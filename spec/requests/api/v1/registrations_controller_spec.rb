@@ -12,7 +12,7 @@ RSpec.describe 'DeviseTokenAuth::RegistrationsController', type: :request do
         password: Faker::Internet.password
       }.to_json
     end
-    let(:create_user_request) { post '/api/v1/auth', params: params, headers: headers }
+    let(:create_user_request) { post user_registration_url, params: params, headers: headers }
 
     it 'user is added to database' do
       expect { create_user_request }.to change(User, :count).by(1)

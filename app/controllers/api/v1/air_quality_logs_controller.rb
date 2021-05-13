@@ -13,7 +13,11 @@ module Api
         page = params[:page] || 1
         per = params[:per] || 25
 
-        @logs = User.joins(homes: :air_quality_logs).select(*QUERY_FIELDS).page(page).per(per)
+        @logs = User.joins(homes: :air_quality_logs)
+                    .select(*QUERY_FIELDS)
+                    .where(id: current_user.id)
+                    .page(page)
+                    .per(per)
       end
     end
   end

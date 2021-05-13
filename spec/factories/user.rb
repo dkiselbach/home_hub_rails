@@ -13,7 +13,9 @@ FactoryBot.define do
 
       after(:create) do |user, evaluator|
         evaluator.homes_count.times do
-          user.homes << FactoryBot.create(:home)
+          home = FactoryBot.create(:home)
+          user.homes << home
+          create_list(:air_quality_log, 5, home: home)
         end
       end
     end

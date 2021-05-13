@@ -18,6 +18,13 @@ module Api
         @home = Home.find(params[:id])
       end
 
+      def index
+        page = params[:page] || 1
+        per = params[:per] || 25
+
+        @homes = current_user.homes.page(page).per(per)
+      end
+
       private
 
       def home_params
