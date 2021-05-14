@@ -9,4 +9,5 @@ class Home < ApplicationRecord
   has_many :air_quality_logs, dependent: :destroy
   has_many :home_users, dependent: :destroy
   has_many :users, through: :home_users
+  has_many :partner_tokens, dependent: :destroy
 end

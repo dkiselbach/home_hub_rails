@@ -19,7 +19,7 @@ RSpec.describe Home, type: :model do
     end
   end
 
-  describe 'dependent: :destroy' do
+  describe 'has_many' do
     context 'when home has air_quality_log' do
       before do
         create(:air_quality_log, home: home)
@@ -38,6 +38,18 @@ RSpec.describe Home, type: :model do
 
       it 'destroys home_users' do
         expect { home.destroy }.to change(HomeUser, :count).by(-1)
+      end
+    end
+
+    context 'when home has tokens' do
+      it 'destroys partner_token' do
+        home = create(:home_with_token)
+        expect { home.destroy }.to change(PartnerToken, :count).by(-1)
+      end
+
+      it 'returns partner_tokens' do
+        home = create(:home_with_token, tokens_count: 5)
+        expect(home.partner_tokens.count).to be(5)
       end
     end
   end
