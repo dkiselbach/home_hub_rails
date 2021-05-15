@@ -36,17 +36,34 @@ RSpec.shared_context 'with PurpleAir mocks', shared_context: :metadata do
       .with(
         query: params,
         headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'User-Agent' => 'Faraday v1.3.0',
           'X-Api-Key' => ENV['READ_TOKEN']
         }
       )
-      .to_return(status: 200, body: WebmockHelper.response_body('get_sensors.json'), headers: {})
+      .to_return(status: 200, body: WebmockHelper.response_body('purple_air/get_sensors.json'), headers: {})
+  end
+end
+
+RSpec.shared_context 'with Hue mocks', shared_context: :metadata do
+  let(:username_params) do
+    {
+      devicetype: 'home_hub#iphone dylan'
+    }
+  end
+
+  before do
+    stub_request(:get, 'https://discovery.meethue.com/')
+      .to_return(status: 200, body: WebmockHelper.response_body('hue/hue_ip_address.json'))
+
+    stub_request(:post, 'https://101.101.46.21/api')
+      .with(
+        body: username_params
+      )
+      .to_return(status: 200, body: WebmockHelper.response_body('hue/create_hue_username.json'))
   end
 end
 
 RSpec.configure do |rspec|
   rspec.include_context 'with user with homes', include_shared: true
   rspec.include_context 'with PurpleAir mocks', include_shared: true
+  rspec.include_context 'with Hue mocks', include_shared: true
 end

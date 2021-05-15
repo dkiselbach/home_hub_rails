@@ -23,6 +23,9 @@ gem 'devise_token_auth'
 # Purple Air API
 gem 'purple_air_api'
 
+# Http client
+gem 'faraday'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 
@@ -58,6 +61,7 @@ group :test, :development do
 
   # Env variables
   gem 'dotenv-rails'
+
 end
 
 group :development do

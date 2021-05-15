@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :air_quality_logs, only: %i[index]
       resources :homes
+      resources :hue
     end
   end
 end
