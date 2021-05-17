@@ -5,18 +5,32 @@ module Api
     # A controller for interacting with the Hue API
     class HueController < ApplicationController
       before_action :authenticate_user!
+      before_action only: [:create] do
+        if current_user.homes.where(id: params[:homeId]).empty?
+          raise ActiveRecord::RecordNotFound,
+                'User does not have access to the home, or the home_id provided is invalid.'
+
+        end
+      end
+
+      rescue_from Hue::ApiError do |error|
+        render status: :bad_request,
+               json: {
+                 error: error.class.to_s,
+                 message: error.message
+               }.to_json
+      end
 
       def create
-        if current_user.homes.where(id: params[:home_id]).empty?
-          render json: {
-            error: 'Home is invalid'
-          }.to_json
-        end
-
         token = Hue::AddBridge.call(username: params[:username], device: params[:device],
-                                    ip_address: params[:ip_address]).token
+                                    ip_address: params[:ipAddress]).token
 
-        PartnerToken.create(token: token, home_id: params[:home_id])
+        PartnerToken.create(token: token, home_id: params[:homeId])
+
+        render status: :created,
+               json: {
+                 message: 'Hue token created successfully'
+               }.to_json
       end
     end
   end

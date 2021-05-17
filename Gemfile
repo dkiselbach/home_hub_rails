@@ -61,7 +61,6 @@ group :test, :development do
 
   # Env variables
   gem 'dotenv-rails'
-
 end
 
 group :development do
