@@ -10,6 +10,14 @@ class ApplicationController < ActionController::API
               message: error.message
             }.to_json
   end
+  rescue_from ApiError do |error|
+    render status: :bad_request,
+           json: {
+             error: 'ApiError',
+             api: error.api,
+             message: error.message
+           }.to_json
+  end
 
   include DeviseTokenAuth::Concerns::SetUserByToken
   # include ActionController::ImplicitRender

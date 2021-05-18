@@ -23,8 +23,12 @@ RSpec.describe Hue::AddBridge do
           .to_return(status: 200, body: WebmockHelper.response_body('hue/errors/link_button_not_pressed.json'))
       end
 
-      it 'raises error' do
-        expect { add_bridge }.to raise_error(StandardError, 'link button not pressed')
+      it 'raises an error' do
+        aggregate_failures do
+          expect { add_bridge }.to raise_error(ApiError, 'link button not pressed') do |error|
+            expect(error.api).to eq('Hue')
+          end
+        end
       end
     end
   end

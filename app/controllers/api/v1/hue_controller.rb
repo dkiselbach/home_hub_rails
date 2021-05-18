@@ -13,14 +13,6 @@ module Api
         end
       end
 
-      rescue_from Hue::ApiError do |error|
-        render status: :bad_request,
-               json: {
-                 error: error.class.to_s,
-                 message: error.message
-               }.to_json
-      end
-
       def create
         token = Hue::AddBridge.call(username: params[:username], device: params[:device],
                                     ip_address: params[:ipAddress]).token

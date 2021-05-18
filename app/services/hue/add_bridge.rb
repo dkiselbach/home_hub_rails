@@ -31,7 +31,7 @@ module Hue
 
       return response if response.first['success']
 
-      raise ApiError, response.first['error']['description']
+      raise ApiError.new response.first['error']['description'], 'Hue'
     end
 
     def username_params

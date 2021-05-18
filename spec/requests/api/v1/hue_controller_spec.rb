@@ -76,15 +76,18 @@ RSpec.describe 'Api::V1::Hue', type: :request do
       # let(:add_bridge) { instance_double('Hue::AddBridge') }
       let(:error_response) do
         {
-          error: 'Hue::ApiError',
+          error: 'ApiError',
+          api: 'Hue',
           message: 'link button not pressed'
         }.to_json
       end
 
       before do
-        allow(Hue::AddBridge).to receive(:call) do
-          raise Hue::ApiError, 'link button not pressed'
-        end
+        stub_request(:post, 'https://101.101.46.21/api')
+          .with(
+            body: username_params
+          )
+          .to_return(status: 200, body: WebmockHelper.response_body('hue/errors/link_button_not_pressed.json'))
 
         create_hue
       end

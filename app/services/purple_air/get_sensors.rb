@@ -25,6 +25,8 @@ module PurpleAir
 
     def response
       @response ||= PurpleAirApi.client(read_token: read_token).request_sensors(fields)
+    rescue StandardError => e
+      raise ApiError.new e.message, 'PurpleAir'
     end
 
     def read_token
