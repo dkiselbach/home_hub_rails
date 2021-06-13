@@ -8,17 +8,18 @@ RSpec.describe 'Api::V1::Hue', type: :request do
 
   describe 'POST /api/v1/hue' do
     subject(:create_hue) do
-      post api_v1_hue_index_url, headers: auth_headers.merge({ 'Accept' => 'application/json' }), params: params
+      post api_v1_home_hue_index_url(home_id: home_id),
+           headers: auth_headers.merge({ 'Accept' => 'application/json' }), params: params
     end
 
     let(:params) do
       {
         username: 'dylan',
         device: 'iphone',
-        ipAddress: '101.101.46.21',
-        homeId: user.homes.first.id
+        ipAddress: '101.101.46.21'
       }
     end
+    let(:home_id) { user.homes.first.id }
 
     context 'when Hue Bridge is available and button is pressed' do
       let(:success_response) do
@@ -44,9 +45,7 @@ RSpec.describe 'Api::V1::Hue', type: :request do
     end
 
     context 'when home_id is invalid' do
-      before do
-        params[:homeId] = user.homes.last.id + 10
-      end
+      let(:home_id) { user.homes.first.id + 10 }
 
       let(:error_response) do
         {

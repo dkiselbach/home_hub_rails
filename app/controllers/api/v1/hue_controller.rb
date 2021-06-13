@@ -6,7 +6,7 @@ module Api
     class HueController < ApplicationController
       before_action :authenticate_user!
       before_action only: [:create] do
-        if current_user.homes.where(id: params[:homeId]).empty?
+        if current_user.homes.where(id: params[:home_id]).empty?
           raise ActiveRecord::RecordNotFound,
                 'User does not have access to the home, or the home_id provided is invalid.'
 
@@ -17,7 +17,7 @@ module Api
         token = Hue::AddBridge.call(username: params[:username], device: params[:device],
                                     ip_address: params[:ipAddress]).token
 
-        partner_token = PartnerToken.new(token: token, home_id: params[:homeId], ip_address: params[:ipAddress])
+        partner_token = PartnerToken.new(token: token, home_id: params[:home_id], ip_address: params[:ipAddress])
 
         partner_token.save!
 
