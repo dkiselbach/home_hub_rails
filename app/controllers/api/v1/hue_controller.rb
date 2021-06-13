@@ -17,7 +17,9 @@ module Api
         token = Hue::AddBridge.call(username: params[:username], device: params[:device],
                                     ip_address: params[:ipAddress]).token
 
-        PartnerToken.create(token: token, home_id: params[:homeId])
+        partner_token = PartnerToken.new(token: token, home_id: params[:homeId], ip_address: params[:ipAddress])
+
+        partner_token.save!
 
         render status: :created,
                json: {

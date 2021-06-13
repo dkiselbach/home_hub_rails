@@ -59,6 +59,12 @@ RSpec.shared_context 'with Hue mocks', shared_context: :metadata do
         body: username_params
       )
       .to_return(status: 200, body: WebmockHelper.response_body('hue/create_hue_username.json'))
+
+    stub_request(:get, 'https://101.101.46.21/api/valid_token/lights')
+      .to_return(status: 200, body: WebmockHelper.response_body('hue/get_lights.json'))
+
+    stub_request(:get, 'https://101.101.46.21/api/invalid_token/lights')
+      .to_return(status: 200, body: WebmockHelper.response_body('hue/errors/unauthorized_user.json'))
   end
 end
 

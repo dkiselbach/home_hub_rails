@@ -10,10 +10,26 @@ class ApplicationController < ActionController::API
               message: error.message
             }.to_json
   end
+  rescue_from ActiveRecord::RecordInvalid do |error|
+    render  status: :unprocessable_entity,
+            json: {
+              error: 'RecordInvalid',
+              message: error.message
+            }.to_json
+  end
+
   rescue_from ApiError do |error|
     render status: :bad_request,
            json: {
              error: 'ApiError',
+             api: error.api,
+             message: error.message
+           }.to_json
+  end
+  rescue_from InputError do |error|
+    render status: :bad_request,
+           json: {
+             error: 'InputError',
              api: error.api,
              message: error.message
            }.to_json

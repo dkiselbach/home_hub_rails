@@ -96,5 +96,25 @@ RSpec.describe 'Api::V1::Hue', type: :request do
         expect(response.body).to eq(error_response)
       end
     end
+
+    context 'when Hue inputs are invalid' do
+      # let(:add_bridge) { instance_double('Hue::AddBridge') }
+      let(:error_response) do
+        {
+          error: 'InputError',
+          api: 'Hue',
+          message: { ip_address: ["can't be blank"] }.to_json
+        }.to_json
+      end
+
+      before do
+        params[:ipAddress] = nil
+      end
+
+      it 'returns error description' do
+        create_hue
+        expect(response.body).to eq(error_response)
+      end
+    end
   end
 end

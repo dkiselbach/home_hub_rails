@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_14_131753) do
+ActiveRecord::Schema.define(version: 2021_05_20_133007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2021_05_14_131753) do
     t.bigint "home_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "ip_address", null: false
     t.index ["home_id"], name: "index_partner_tokens_on_home_id"
   end
 

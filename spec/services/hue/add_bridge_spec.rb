@@ -31,5 +31,13 @@ RSpec.describe Hue::AddBridge do
         end
       end
     end
+
+    context 'when params are nil' do
+      subject(:add_bridge) { described_class.call(username: 'dylan', device: 'iphone', ip_address: nil) }
+
+      it 'raises error' do
+        expect { add_bridge }.to raise_error(InputError)
+      end
+    end
   end
 end
