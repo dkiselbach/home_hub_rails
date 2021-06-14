@@ -37,7 +37,7 @@ module Hue
     private
 
     def url
-      "https://#{ip_address}/api/#{token}/lights"
+      "http://#{ip_address}/api/#{token}/lights"
     end
 
     def argument_error_handler
