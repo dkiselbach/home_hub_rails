@@ -1,47 +1,54 @@
 # frozen_string_literal: true
 
 module Hue
-  # Class for accessing lights data for the selected Hue Bridge
+  # Class for getting light information from Hue
   class GetLights
-    attr_reader :device, :username, :ip_address
+    include ActiveModel::Validations
+    include ActiveModel::Callbacks
+
+    define_model_callbacks :initialize, only: [:after]
+    define_model_callbacks :request, only: [:after]
+    after_initialize :valid?
+    after_initialize :argument_error_handler
+    after_request :response_error_handler
+
+    attr_reader :token, :ip_address
+    attr_accessor :response
+
+    validates :token, :ip_address, presence: true
 
     def self.call(...)
-      new(...).execute
+      new(...).request
     end
 
-    def initialize(username:, device:, ip_address:)
-      @device = device
-      @username = username
-      @ip_address = ip_address
+    def initialize(token:, ip_address:)
+      run_callbacks :initialize do
+        @token = token
+        @ip_address = ip_address
+      end
     end
 
-    def execute
-      token
-      self
-    end
-
-    def token
-      @token ||= create_username.first['success']['username']
+    def request
+      run_callbacks :request do
+        self.response = JSON.parse(Faraday.get(url).body)
+      end
     end
 
     private
 
-    def create_username
-      response = JSON.parse(Faraday.post(username_url, username_params).body)
-
-      return response if response.first['success']
-
-      raise ApiError.new response.first['error']['description'], 'Hue'
+    def url
+      "https://#{ip_address}/api/#{token}/lights"
     end
 
-    def username_params
-      {
-        devicetype: "home_hub##{device} #{username}"
-      }
+    def argument_error_handler
+      raise InputError.new errors.to_json, 'Hue' unless errors.empty?
     end
 
-    def username_url
-      "https://#{ip_address}/api"
+    def response_error_handler
+      return if response.first.instance_of?(Array)
+      raise ApiError.new response.first['error']['description'], 'Hue' if response.first['error']
+
+      raise StandardError, response
     end
   end
 end

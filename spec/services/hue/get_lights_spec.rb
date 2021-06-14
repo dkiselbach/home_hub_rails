@@ -1,37 +1,43 @@
-# # frozen_string_literal: true
+# frozen_string_literal: true
 
-# require 'rails_helper'
+require 'rails_helper'
 
-# RSpec.describe Hue::GetLights do
-#   subject(:get_lights) { described_class.call(token: token, ip_address: '101.101.46.21') }
+RSpec.describe Hue::GetLights do
+  subject(:get_lights) { described_class.call(ip_address: '101.101.46.21', token: token) }
 
-#   include_context 'with Hue mocks'
+  let(:token) { 'valid_token' }
 
-#   describe '.call' do
-#     context 'when token is valid' do
-#       let(:token) { create(:partner_token, token: 'valid_token') }
+  include_context 'with Hue mocks'
 
-#       it 'creates a new username for the bridge' do
-#         expect(add_bridge.token).to eq('DP-54FR3bze5KFV1rn43dyeF9a69xe-G8-6ZB12')
-#       end
-#     end
+  describe '.call' do
+    context 'when authorization is valid' do
+      it 'returns lights' do
+        aggregate_failures do
+          expect(get_lights.length).to eq(5)
+          expect(get_lights.first[0]).to eq('9')
+          expect(get_lights['12']['state']['on']).to be_falsey
+        end
+      end
+    end
 
-#     context 'when token is not valid' do
-#       before do
-#         stub_request(:post, 'https://101.101.46.21/api')
-#           .with(
-#             body: username_params
-#           )
-#           .to_return(status: 200, body: WebmockHelper.response_body('hue/errors/link_button_not_pressed.json'))
-#       end
+    context 'when authorization is invalid' do
+      let(:token) { 'invalid_token' }
 
-#       it 'raises an error' do
-#         aggregate_failures do
-#           expect { add_bridge }.to raise_error(ApiError, 'link button not pressed') do |error|
-#             expect(error.api).to eq('Hue')
-#           end
-#         end
-#       end
-#     end
-#   end
-# end
+      it 'raises an error' do
+        aggregate_failures do
+          expect { get_lights }.to raise_error(ApiError, 'unauthorized user') do |error|
+            expect(error.api).to eq('Hue')
+          end
+        end
+      end
+    end
+
+    context 'when params are nil' do
+      let(:token) { nil }
+
+      it 'raises error' do
+        expect { get_lights }.to raise_error(InputError)
+      end
+    end
+  end
+end
